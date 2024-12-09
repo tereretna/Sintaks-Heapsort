@@ -1,0 +1,93 @@
+#include <stdio.h>
+
+//fungsi tukar elemen
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+//heapify 
+void heapify(int arr[], int n, int i) {
+    int largest = i;          //inisialisasi terbesar sebagai root
+    int left = 2 * i + 1;     //indeks anak kiri
+    int right = 2 * i + 2;    //indeks anak kanan
+
+    //jika anak kiri lebih besar dari largest
+    if (left < n && arr[left] > arr[largest]) {
+        largest = left;
+    }
+
+    //jika anak kanan lebih besar dari largest
+    if (right < n && arr[right] > arr[largest]) {
+        largest = right;
+    }
+
+    //jika largest bukan root
+    if (largest != i) {
+        swap(&arr[i], &arr[largest]);
+
+        //rekursif untuk subtree yang terpengaruh
+        heapify(arr, n, largest);
+    }
+}
+
+//fungsi mengurutkan array menggunakan HeapSort
+void sortingHeap(int arr[], int n) {
+    //heap maksimum
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(arr, n, i);
+    }
+
+    //ekstraksi elemen dari heap
+    for (int i = n - 1; i > 0; i--) {
+        //pindahkan root ke akhir array
+        swap(&arr[0], &arr[i]);
+
+        //heapify pada heap yang tersisa
+        heapify(arr, i, 0);
+    }
+}
+
+//validasi masukan angka
+int validasiInput() {
+    int angka;
+    while (scanf("%d", &angka) != 1) {
+        printf("Masukan tidak valid. Silakan masukkan angka: ");
+        while (getchar() != '\n'); // Bersihkan buffer input
+    }
+    return angka;
+}
+
+//mencetak array
+void printArray(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+
+
+int main() {
+    int n;
+    printf("Masukkan jumlah elemen: ");
+    n = validasiInput();
+
+    int angka[n];
+    printf("Masukkan %d angka:\n", n);
+    for (int i = 0; i < n; i++) {
+        printf("Elemen ke-%d: ", i + 1);
+        angka[i] = validasiInput();
+    }
+
+    printf("Array sebelum diurut:\n");
+    printArray(angka, n);
+
+    sortingHeap(angka, n);
+
+    printf("Array setelah diurut:\n");
+    printArray(angka, n);
+
+    return 0;
+}
